@@ -34,7 +34,9 @@
                                 <th>Nomor PO</th>
                                 <th>Nomor SPB</th>
                                 <th width="200px">Status</th>
+                                @if(Auth::User()->hasRole('admin'))
                                 <th width="180px">Operation</th>
+                                @endif
                         </tr>
                     </thead>
                     <tbody>
