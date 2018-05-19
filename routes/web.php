@@ -27,3 +27,10 @@ Route::get('monitoring/inputspb/{id}/edit','MonitoringController@createspb')->na
 Route::patch('monitoring/updatespb/{id}','MonitoringController@storespb')->name('updatespb');
 
 Route::get('monitoring/datatables',array('as'=>'monitoring.datatables','uses'=>'MonitoringController@datatables'));
+Auth::routes();
+
+Route::get('/home', 'HomeController@index')->name('home');
+
+Auth::routes();
+
+Route::get('/home', 'HomeController@index')->name('home');
