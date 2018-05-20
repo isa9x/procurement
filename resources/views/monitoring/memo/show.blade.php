@@ -8,12 +8,16 @@
                 @section ('pane2_panel_body')
                     
                     <!-- /.panel -->
-                    {!! Form::open(array('route' =>'monitoring.store','method'=>'POST','files' => true)) !!}
                         <div class="row">
                             <div class="col-lg-12">
                                 
                                 <div class="col-xs-6 col-sm-6 col-md-6">
                                     <div class="form-group scanmemo">
+                                        @empty($memo->scan_memo)
+                                            @php
+                                                $memo->scan_memo='images/no_image.svg';
+                                            @endphp
+                                         @endempty
                                        {!! Form::label('scan_memo', 'Scan Memo') !!}<br>
                                        <img height="250px" width="100%" src="{{ asset('/' . $memo->scan_memo) }}" />
                                     </div>
@@ -41,6 +45,7 @@
                             @php
                             $date=date('d-m-Y', $memo['tanggal_memo']);
                             @endphp    
+                        
                             <div class="col-lg-12">
                                   <div class="col-xs-4 col-sm-4 col-md-4">
                                     <div class="form-group">

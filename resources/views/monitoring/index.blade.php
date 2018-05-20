@@ -34,7 +34,7 @@
                                 <th>Nomor PO</th>
                                 <th>Nomor SPB</th>
                                 <th width="150px">Status</th>
-                                <th width="180px">Operation</th>
+                                <th>Operation</th>
                         </tr>
                     </thead>
                     <tbody>
@@ -42,7 +42,7 @@
                     </tbody>
             </table>
         </div>
-             <script src="{{asset('js/laravel.methodHandler.js')}}" type="text/javascript"></script>
+            <script src="{{asset('js/laravel.methodHandler.js')}}" type="text/javascript"></script>
             <script src="{{asset('js/jquery.dataTables.min.js')}}" type="text/javascript"></script>
             <script type="text/javascript">    
                 $(document).ready(function() {

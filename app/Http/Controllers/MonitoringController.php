@@ -205,7 +205,28 @@ class MonitoringController extends Controller
     {
         $memo = Memo::find($id);
 
-        return view('monitoring.show',compact('memo'));
+        return view('monitoring.memo.show',compact('memo'));
+    }
+
+        public function showpr($id)
+    {
+        $pr = Pr::find($id);
+
+        return view('monitoring.pr.show',compact('pr'));
+    }
+
+        public function showpo($id)
+    {
+        $po = Po::find($id);
+
+        return view('monitoring.po.show',compact('po'));
+    }
+
+        public function showspb($id)
+    {
+        $spb = Spb::find($id);
+
+        return view('monitoring.spb.show',compact('spb'));
     }
 
     public function datatables(){
@@ -215,16 +236,25 @@ class MonitoringController extends Controller
         $l=array();
         $i=0;
         foreach ($memo as $value) {
-            $l[0] = $i;
-            $l[1] = $value->no_memo;
-            $l[2] = $value->tanggal_memo;
+
+            $date=date('d-m-Y', $value['tanggal_memo']);
+            $l[0] = $i+1;
+            $l[1] ="
+                    <a href='".route('monitoring.show',$value->id)."'>".$value->no_memo."</a>
+                   ";
+            $l[2] = $date;
             $l[3] = $value->spesifikasi;
-            $l[4] = $value->pr->no_pr;
-            $l[5] = $value->pr->po->no_po;
-            $l[6] = $value->pr->po->spb->no_spb;
+            $l[4] ="
+                     <a href='".route('showpr',$value->pr->id)."'>".$value->pr->no_pr."</a>
+                   "; 
+            $l[5] ="
+                     <a href='".route('showpo',$value->pr->po->id)."'>".$value->pr->po->no_po."</a>
+                   ";
+            $l[6] ="
+                     <a href='".route('showspb',$value->pr->po->spb->id)."'>".$value->pr->po->spb->no_spb."</a>
+                   ";
             $l[7] = $value->status;
-            $l[8] = "
-                <a class='btn btn-info' href='".route('monitoring.show',$value->id)."'>Lihat Memo</a> 
+            $l[8] = " 
                 <a class='btn btn-danger' href='".route('monitoring.destroy',$value->id)."' data-method = 'DELETE' data-confirm='Yakin untuk menghapus data?' >Hapus</a>
                 ";
 
