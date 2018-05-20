@@ -73,3 +73,25 @@ public function datatables(){
     $('div.alert').not('.alert-important').delay(3000).slideUp(300);  
  </script>
  @stop
+
+
+ $l[8] = "
+                @empty($memo1->pr->no_pr)
+                       <a class='btn btn-info' href='{{ route('".inputpr."',$memo1->pr->id) }}'>Input PR</a>
+                    @endempty
+                    
+                    @isset($memo1->pr->no_pr)
+                        @empty($memo1->pr->po->no_po)
+                           <a class='btn btn-primary' href='{{ route('".inputpo."',$memo1->pr->po->id) }}'>Input PO</a>
+                        @endempty
+                    @endisset
+                    
+                    @isset($memo1->pr->po->no_po)
+                        @empty($memo1->pr->po->spb->no_spb)
+                            <a class='btn btn-primary' href='{{ route('".inputspb."',$memo1->pr->po->spb->id) }}'>Input SPB</a>
+                        @endempty
+                    @endisset
+
+                {!! Form::open(['method' => 'DELETE','route' => ['monitoring.destroy', $memo1->id],'style'=>'display:inline']) !!}
+                {!! Form::submit('Delete', ['class' => 'btn btn-danger']) !!}
+                {!! Form::close() !!}";

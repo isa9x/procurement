@@ -1,5 +1,5 @@
-@extends('layouts.dashboard')
-@section('page_heading','Dashboard')
+@extends('layouts.dashboard'){{-- 
+@section('page_heading','Dashboard') --}}
 @section('section')
     <div class="row">
                 <div class="col-lg-12">
@@ -29,31 +29,30 @@
                                 <th>No</th>
                                 <th>Nomor Memo</th>
                                 <th>Tanggal Memo</th>
-                                <th width="250px">Barang & Spesifikasi</th>
+                                <th width="200px">Barang & Spesifikasi</th>
                                 <th>Nomor PR</th>
                                 <th>Nomor PO</th>
                                 <th>Nomor SPB</th>
-                                <th width="200px">Status</th>
-                                @if(Auth::User()->hasRole('admin'))
+                                <th width="150px">Status</th>
                                 <th width="180px">Operation</th>
-                                @endif
                         </tr>
                     </thead>
                     <tbody>
                         
                     </tbody>
             </table>
-
+        </div>
+             <script src="{{asset('js/laravel.methodHandler.js')}}" type="text/javascript"></script>
+            <script src="{{asset('js/jquery.dataTables.min.js')}}" type="text/javascript"></script>
             <script type="text/javascript">    
-                $(document).ready(function(){
-                      $("#datatables").DataTable({
-                          "ajax" : "{!! route('monitoring.datatables') !!}"}).on('draw.dt',function(){
-                               $('a[data-method]').click(function(e){
-                                  handleMethod(e,$(this));
-                                  e.preventDefault();
-                               });
-                        }); 
-                }); 
+                $(document).ready(function() {
+                    $('#datatables').DataTable( {
+                        "ajax": {
+                            "url": "{!! route('monitoring.datatables') !!}",
+                            "dataSrc": 'data'
+                        }
+                    } );
+                } ); 
              </script>
 
                 @endsection

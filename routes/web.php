@@ -15,6 +15,8 @@ Route::get('/', function () {
     return view('welcome');
 });
 
+Route::get('monitoring/datatables', 'MonitoringController@datatables')->name('monitoring.datatables');
+		
 Route::resource('monitoring','MonitoringController');
 
 Route::get('monitoring/inputpr/{id}/edit','MonitoringController@createpr')->name('inputpr');
@@ -26,7 +28,6 @@ Route::patch('monitoring/updatepo/{id}','MonitoringController@storepo')->name('u
 Route::get('monitoring/inputspb/{id}/edit','MonitoringController@createspb')->name('inputspb');
 Route::patch('monitoring/updatespb/{id}','MonitoringController@storespb')->name('updatespb');
 
-Route::get('monitoring/datatables',array('as'=>'monitoring.datatables','uses'=>'MonitoringController@datatables'));
 Auth::routes();
 
 Route::get('/home', 'HomeController@index')->name('home');

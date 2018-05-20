@@ -1,6 +1,30 @@
-@extends('layouts.plane')
+<!DOCTYPE html>
+<!--[if IE 8]> <html lang="en" class="ie8 no-js"> <![endif]-->
+<!--[if IE 9]> <html lang="en" class="ie9 no-js"> <![endif]-->
+<!--[if !IE]><!-->
+<html lang="en" class="no-js">
+<!--<![endif]-->
+<head>
+    <meta charset="utf-8"/>
+    <title>Monitoring PR / PO</title>
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta content="width=device-width, initial-scale=1" name="viewport"/>
+    <meta content="" name="description"/>
+    <meta content="" name="author"/>
 
-@section('body')
+    <link rel="stylesheet" href="{{ asset("css/styles.css") }}"  rel="stylesheet"/>
+    <link href="{{asset('css/bootstrap-datepicker.css')}}" rel="stylesheet">
+    <link href="{{asset('css/jquery.dataTables.min.css')}}" rel="stylesheet">
+
+    <script src="{{asset('js/jquery-3.2.1.slim.min.js')}}" type="text/javascript"></script>
+
+    <script src="{{asset("js/frontend.js") }}" type="text/javascript"></script>
+    <script src="{{asset('js/bootstrap-datepicker.js')}}" type="text/javascript"></script>
+    <script src="{{asset('js/popper.min.js')}}" type="text/javascript"></script>
+
+</head>
+
+<body>
  <div id="wrapper">
 
         <!-- Navigation -->
@@ -12,7 +36,7 @@
                     <span class="icon-bar"></span>
                     <span class="icon-bar"></span>
                 </button>
-                <a class="navbar-brand" href="{{ url ('') }}">Monitoring PR / PO PT. KMP</a>
+                <a class="navbar-brand" href="{{ url ('') }}">PT. KIRANA MUSI PERSADA</a>
             </div>
             <!-- /.navbar-header -->
 
@@ -22,11 +46,11 @@
                         <i class="fa fa-user fa-fw"></i>  <i class="fa fa-caret-down"></i>
                     </a>
                     <ul class="dropdown-menu dropdown-user">
-                        <li><a href="#"><i class="fa fa-user fa-fw"></i> User Profile</a>
+                       {{--  <li><a href="#"><i class="fa fa-user fa-fw"></i> User Profile</a>
                         </li>
                         <li><a href="#"><i class="fa fa-gear fa-fw"></i> Settings</a>
                         </li>
-                        <li class="divider"></li>
+                        <li class="divider"></li> --}}
                         <li><a href="{{ url ('logout') }}"><i class="fa fa-sign-out fa-fw"></i> Logout</a>
                         </li>
                     </ul>
@@ -36,9 +60,9 @@
             
         <div class="col-lg-12">
 
-                <div class="col-lg-12">
+                {{-- <div class="col-lg-12">
                     <h2 class="page-header">@yield('page_heading')</h2>
-                </div>
+                </div> --}}
                 <!-- /.col-lg-12 -->
     
 			<div class="row">  
@@ -50,5 +74,12 @@
             <!-- /#page-wrapper -->
         </div>
     </div>
-@stop
+</body>
+<script type="text/javascript">  
+        $('#datepicker').datepicker({ 
+            autoclose: true,   
+            format: 'dd-mm-yyyy'  
+         });  
+    </script>
+</html>
 

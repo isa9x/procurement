@@ -16,12 +16,6 @@
 	<link href="{{asset('css/bootstrap-datepicker.css')}}" rel="stylesheet">
 	<link href="{{asset('css/jquery.dataTables.min.css')}}" rel="stylesheet">
 
-	{{-- <script src="{{asset('js/jquery-2.0.3.min.js')}}" type="text/javascript"></script> --}}
-		<script
-	  src="https://code.jquery.com/jquery-1.12.4.min.js"
-	  integrity="sha256-ZosEbRLbNQzLpnKIkEdrPv7lOy9C27hHQ+Xp8a4MxAQ="
-	  crossorigin="anonymous"></script>
-	<script src="{{asset('js/jquery.dataTables.min.js')}}" type="text/javascript"></script>  
 	<script src="{{asset("js/frontend.js") }}" type="text/javascript"></script>
 	<script src="{{asset('js/bootstrap-datepicker.js')}}" type="text/javascript"></script>
     <script src="{{asset('js/popper.min.js')}}" type="text/javascript"></script>

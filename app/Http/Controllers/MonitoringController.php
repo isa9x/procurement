@@ -11,9 +11,9 @@ use App\Spb;
 
 class MonitoringController extends Controller
 {
-    public function __construct(){
-        $this->middleware('auth');
-    }
+    // public function __construct(){
+    //     $this->middleware('auth');
+    // }
     /**
      * Display a listing of the resource.
      *
@@ -203,50 +203,39 @@ class MonitoringController extends Controller
      */
     public function show($id)
     {
-        //
+        $memo = Memo::find($id);
+
+        return view('monitoring.show',compact('memo'));
     }
 
     public function datatables(){
-        $memo = Memo::all();
+    
+        $memo = Memo::get()->all();
         $data=array();
         $l=array();
         $i=0;
         foreach ($memo as $value) {
-            $l[0] = $i+1;
-            $l[1] = $memo->no_memo;
-            $l[2] = $memo->tanggal_memo;
-            $l[3] = $memo->spesifikasi;
-            $l[4] = $memo->pr->no_pr;
-            $l[5] = $memo->pr->po->no_po;
-            $l[6] = $memo->pr->po->spb->no_spb;
-            $l[7] = $memo->status;
+            $l[0] = $i;
+            $l[1] = $value->no_memo;
+            $l[2] = $value->tanggal_memo;
+            $l[3] = $value->spesifikasi;
+            $l[4] = $value->pr->no_pr;
+            $l[5] = $value->pr->po->no_po;
+            $l[6] = $value->pr->po->spb->no_spb;
+            $l[7] = $value->status;
             $l[8] = "
-                @empty($memo1->pr->no_pr)
-                       <a class='btn btn-info' href='{{ route('".inputpr."',$memo1->pr->id) }}'>Input PR</a>
-                    @endempty
-                    
-                    @isset($memo1->pr->no_pr)
-                        @empty($memo1->pr->po->no_po)
-                           <a class='btn btn-primary' href='{{ route('".inputpo."',$memo1->pr->po->id) }}'>Input PO</a>
-                        @endempty
-                    @endisset
-                    
-                    @isset($memo1->pr->po->no_po)
-                        @empty($memo1->pr->po->spb->no_spb)
-                            <a class='btn btn-primary' href='{{ route('".inputspb."',$memo1->pr->po->spb->id) }}'>Input SPB</a>
-                        @endempty
-                    @endisset
-
-                {!! Form::open(['method' => 'DELETE','route' => ['monitoring.destroy', $memo1->id],'style'=>'display:inline']) !!}
-                {!! Form::submit('Delete', ['class' => 'btn btn-danger']) !!}
-                {!! Form::close() !!}";
+                <a class='btn btn-info' href='".route('monitoring.show',$value->id)."'>Lihat Memo</a> 
+                <a class='btn btn-danger' href='".route('monitoring.destroy',$value->id)."' data-method = 'DELETE' data-confirm='Yakin untuk menghapus data?' >Hapus</a>
+                ";
 
             $data[$i]=$l;
             $i++;
         }
+        
         $return['data'] = $data;
-        return response()->json($return);
-    }
+        return response()->json($return);   
+        
+        }
 
     /**
      * Show the form for editing the specified resource.
