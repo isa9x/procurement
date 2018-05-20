@@ -13,7 +13,7 @@
                                 
                                 <div class="col-xs-6 col-sm-6 col-md-6">
                                     <div class="form-group">
-                                        @empty($pr->scan_po)
+                                        @empty($pr->scan_pr)
                                             @php
                                                 $pr->scan_pr='images/no_image.svg';
                                             @endphp

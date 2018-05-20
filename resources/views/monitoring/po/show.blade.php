@@ -13,7 +13,7 @@
                                 
                                 <div class="col-xs-6 col-sm-6 col-md-6">
                                     <div class="form-group">
-                                         @empty($po->scan_po)
+                                        @empty($po->scan_po)
                                             @php
                                                 $po->scan_po='images/no_image.svg';
                                             @endphp
@@ -36,12 +36,13 @@
                                 <div class="col-xs-4 col-sm-4 col-md-4">
                                     <div class="form-group">
                                         {!! Form::label('tanggal_po', 'Tanggal PO') !!}
-                                        <input class="date form-control"  type="text" id="datepicker" name="tanggal_pr" value="{{ $date }}" disabled>
+                                        <input class="date form-control"  type="text" id="datepicker" name="tanggal_po" value="{{ $date }}" disabled>
                                     </div>
                                  </div>
 
                                  <div class="col-xs-4 col-sm-4 col-md-4">
                                     <br>
+
                                         @empty($po->spb->no_spb)
                                             <a class='btn btn-primary' href='{{ route('inputspb',$po->spb->id) }}'>Input SPB</a>
                                         @endempty

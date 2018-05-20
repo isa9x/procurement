@@ -21,12 +21,12 @@ class MonitoringController extends Controller
      */
     public function index(Request $request)
     {
-        $memo = Memo::latest()->paginate(5);
-        return view('monitoring.index',compact('memo'))
-        ->with('i', (request()->input('page', 1) - 1) * 5);
+        // $memo = Memo::latest()->paginate(5);
+        // return view('monitoring.index',compact('memo'))
+        // ->with('i', (request()->input('page', 1) - 1) * 5);
         
-        // $memo = Memo::all();
-        // return view('monitoring.index',compact('memo'));
+        $memo = Memo::all();
+        return view('monitoring.index',compact('memo'));
     }
 
     /**
@@ -119,9 +119,10 @@ class MonitoringController extends Controller
             'scan_pr' => $request->scan_pr,
             'tanggal_pr' => $request->tanggal_pr,
         ]);
-
+        
+        if($pr->memo->status ='Sedang Proses PR'){
         Memo::find($pr->memo->id)->update(['status'=>'Proses Pembuatan PO']);
-
+        }   
          return redirect()->route('monitoring.index')
                         ->with('success','PR berhasil di tambah');   
     }
@@ -155,8 +156,9 @@ class MonitoringController extends Controller
             'tanggal_po' => $request->tanggal_po,
         ]);
 
+        if($po->pr->memo->status ='Proses Pembuatan PO'){
         Memo::find($po->pr->memo->id)->update(['status'=>'Sedang Menunggu SPB']);
-
+        }
          return redirect()->route('monitoring.index')
                         ->with('success','PO berhasil di tambah');  
     }
@@ -190,7 +192,11 @@ class MonitoringController extends Controller
             'tanggal_spb' => $request->tanggal_spb,
         ]);
 
+        if($spb->po->pr->memo->status ='Sedang Menunggu SPB'){
         Memo::find($spb->po->pr->memo->id)->update(['status'=>'Barang sudah Sampai, mohon cek di gudang']);
+        }else{
+
+        }
 
          return redirect()->route('monitoring.index')
                         ->with('success','SPB berhasil di tambah');
@@ -275,7 +281,26 @@ class MonitoringController extends Controller
      */
     public function edit($id)
     {
-        //
+        $memo=Memo::find($id);
+        return view('monitoring.memo.edit',compact('memo'));
+    }
+
+    public function editpr($id)
+    {
+        $pr=Pr::find($id);
+        return view('monitoring.pr.edit',compact('pr'));
+    }
+
+    public function editpo($id)
+    {
+        $po=Po::find($id);
+        return view('monitoring.po.edit',compact('po'));
+    }
+
+    public function editspb($id)
+    {
+        $spb=Spb::find($id);
+        return view('monitoring.spb.edit',compact('spb'));
     }
 
     /**
@@ -287,7 +312,31 @@ class MonitoringController extends Controller
      */
     public function update(Request $request, $id)
     {
+        $memo = Memo::find($id);
 
+        if($request->hasfile('scan_memo'))
+         {
+            $file = $request->file('scan_memo');
+            $extension = $file->getClientOriginalExtension();
+            $filename=time().$file->getClientOriginalName(). '.' .$extension;
+            $file->move(public_path().'/images/memo', $filename);
+            $request->scan_memo='images/memo/'. $filename;
+         }
+
+        $date=date_create($request->get('tanggal_memo'));
+        $format = date_format($date,"d-m-Y");
+        $request->tanggal_memo = strtotime($format);
+
+        Memo::find($id)->update([
+            'no_memo' => $request->no_memo,
+            'scan_memo' => $request->scan_memo,
+            'tanggal_memo' => $request->tanggal_memo,
+            'spesifikasi' => $request->spesifikasi,
+            'status' => $request->status,
+        ]);
+
+        return redirect()->route('monitoring.index')
+                        ->with('success','Memo berhasil di edit');
     }
 
     /**

@@ -13,7 +13,7 @@
                                 
                                 <div class="col-xs-6 col-sm-6 col-md-6">
                                     <div class="form-group">
-                                         @empty($spb->scan_spb)
+                                        @empty($spb->scan_spb)
                                             @php
                                                 $spb->scan_spb='images/no_image.svg';
                                             @endphp
@@ -35,13 +35,14 @@
                                 @endphp    
                                 <div class="col-xs-4 col-sm-4 col-md-4">
                                     <div class="form-group">
-                                        {!! Form::label('tanggal_spb', 'Tanggal PO') !!}
-                                        <input class="date form-control"  type="text" id="datepicker" name="tanggal_pr" value="{{ $date }}" disabled>
+                                        {!! Form::label('tanggal_spb', 'Tanggal SPB') !!}
+                                        <input class="date form-control"  type="text" id="datepicker" name="tanggal_spb" value="{{ $date }}" disabled>
                                     </div>
                                  </div>
 
                                  <div class="col-xs-4 col-sm-4 col-md-4">
                                     <br>
+
                                     @isset($spb->no_spb)
                                             <a class='btn btn-primary' href='{{ route('editspb',$spb->id) }}'>Edit SPB</a>
                                     @endisset
