@@ -39,14 +39,16 @@
                                         <input class="date form-control"  type="text" id="datepicker" name="tanggal_spb" value="{{ $date }}" disabled>
                                     </div>
                                  </div>
-
+                                
+                                @if(Auth::user()->hasRole('admin'))
                                  <div class="col-xs-4 col-sm-4 col-md-4">
                                     <br>
 
                                     @isset($spb->no_spb)
                                             <a class='btn btn-primary' href='{{ route('editspb',$spb->id) }}'>Edit SPB</a>
                                     @endisset
-                                </div>
+                                 </div>
+                                @endif
                                 
                             </div>    
               

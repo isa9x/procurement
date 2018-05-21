@@ -12,7 +12,7 @@
 */
 
 Route::get('/', function () {
-    return view('welcome');
+    return view('auth.login');
 });
 
 Route::get('monitoring/datatables', 'MonitoringController@datatables')->name('monitoring.datatables');

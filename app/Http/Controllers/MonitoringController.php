@@ -11,9 +11,10 @@ use App\Spb;
 
 class MonitoringController extends Controller
 {
-    // public function __construct(){
-    //     $this->middleware('auth');
-    // }
+    public function __construct()
+  {
+    $this->middleware('auth');
+  }
     /**
      * Display a listing of the resource.
      *
@@ -21,21 +22,23 @@ class MonitoringController extends Controller
      */
     public function index(Request $request)
     {
-        // $memo = Memo::latest()->paginate(5);
-        // return view('monitoring.index',compact('memo'))
-        // ->with('i', (request()->input('page', 1) - 1) * 5);
-        
-        $memo = Memo::all();
-        return view('monitoring.index',compact('memo'));
+
+        if($request->user()->hasRole('admin')){
+            $memo = Memo::all();
+            return view('monitoring.index',compact('memo'));
+        }else if ($request->user()->hasRole('viewer')){
+            $memo = Memo::all();
+            return view('monitoring.indexviewer',compact('memo'));
+        }
     }
 
     /**
      * Show the form for creating a new resource.
-     *
-     * @return \Illuminate\Http\Response
+     *     * @return \Illuminate\Http\Response
      */
     public function create()
     {
+        $request->user()->authorizeRoles('admin');
         return view('monitoring.memo.create');
     }
 
@@ -92,6 +95,7 @@ class MonitoringController extends Controller
 
     public function createpr($id)
     {   
+        $request->user()->authorizeRoles('admin');
         $pr=Pr::find($id);
         return view('monitoring.pr.create',compact('pr'));
     }
@@ -128,7 +132,8 @@ class MonitoringController extends Controller
     }
 
     public function createpo($id)
-    {
+    {   
+        $request->user()->authorizeRoles('admin');
         $po=Po::find($id);
         return view('monitoring.po.create',compact('po'));
     }
@@ -165,6 +170,7 @@ class MonitoringController extends Controller
     
     public function createspb($id)
     {
+        $request->user()->authorizeRoles('admin');
         $spb=Spb::find($id);
         return view('monitoring.spb.create',compact('spb'));
     }
@@ -235,8 +241,10 @@ class MonitoringController extends Controller
         return view('monitoring.spb.show',compact('spb'));
     }
 
-    public function datatables(){
+    public function datatables(Request $request){
     
+
+     if($request->user()->hasRole('admin')){
         $memo = Memo::get()->all();
         $data=array();
         $l=array();
@@ -270,8 +278,43 @@ class MonitoringController extends Controller
         
         $return['data'] = $data;
         return response()->json($return);   
-        
+      }
+
+     if($request->user()->hasRole('viewer')){
+        $memo = Memo::get()->all();
+        $data=array();
+        $l=array();
+        $i=0;
+        foreach ($memo as $value) {
+
+            $date=date('d-m-Y', $value['tanggal_memo']);
+            $l[0] = $i+1;
+            $l[1] ="
+                    <a href='".route('monitoring.show',$value->id)."'>".$value->no_memo."</a>
+                   ";
+            $l[2] = $date;
+            $l[3] = $value->spesifikasi;
+            $l[4] ="
+                     <a href='".route('showpr',$value->pr->id)."'>".$value->pr->no_pr."</a>
+                   "; 
+            $l[5] ="
+                     <a href='".route('showpo',$value->pr->po->id)."'>".$value->pr->po->no_po."</a>
+                   ";
+            $l[6] ="
+                     <a href='".route('showspb',$value->pr->po->spb->id)."'>".$value->pr->po->spb->no_spb."</a>
+                   ";
+            $l[7] = $value->status;
+           
+
+            $data[$i]=$l;
+            $i++;
         }
+        
+        $return['data'] = $data;
+        return response()->json($return);   
+      } 
+
+    }
 
     /**
      * Show the form for editing the specified resource.
@@ -281,24 +324,28 @@ class MonitoringController extends Controller
      */
     public function edit($id)
     {
+        $request->user()->authorizeRoles('admin');
         $memo=Memo::find($id);
         return view('monitoring.memo.edit',compact('memo'));
     }
 
     public function editpr($id)
     {
+        $request->user()->authorizeRoles('admin');
         $pr=Pr::find($id);
         return view('monitoring.pr.edit',compact('pr'));
     }
 
     public function editpo($id)
     {
+        $request->user()->authorizeRoles('admin');
         $po=Po::find($id);
         return view('monitoring.po.edit',compact('po'));
     }
 
     public function editspb($id)
     {
+        $request->user()->authorizeRoles('admin');
         $spb=Spb::find($id);
         return view('monitoring.spb.edit',compact('spb'));
     }
@@ -348,6 +395,7 @@ class MonitoringController extends Controller
     
     public function destroy($id)
     {
+        $request->user()->authorizeRoles('admin');
         Memo::find($id)->delete();
         return redirect()->route('monitoring.index')
                         ->with('success','Memo berhasil dihapus');

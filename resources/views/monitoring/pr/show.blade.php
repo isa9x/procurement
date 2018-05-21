@@ -40,22 +40,24 @@
                                     </div>
                                  </div>
 
-                                 <div class="col-xs-4 col-sm-4 col-md-4">
+                                 @if(Auth::user()->hasRole('admin'))
+                                    <div class="col-xs-4 col-sm-4 col-md-4">
                                     <br>
                                         @empty($pr->po->no_po)
                                            <a class='btn btn-primary' href='{{ route('inputpo',$pr->po->id) }}'>Input PO</a>
                                         @endempty
                         
-                                    @isset($pr->po->spb->bo_spb)
-                                        @empty($pr->po->spb->no_spb)
-                                            <a class='btn btn-primary' href='{{ route('inputspb',$pr->po->spb->id) }}'>Input SPB</a>
-                                        @endempty
-                                    @endisset
+                                        @isset($pr->po->spb->bo_spb)
+                                            @empty($pr->po->spb->no_spb)
+                                                <a class='btn btn-primary' href='{{ route('inputspb',$pr->po->spb->id) }}'>Input SPB</a>
+                                            @endempty
+                                        @endisset
 
-                                    @isset($pr->po->spb->no_spb)
-                                            <a class='btn btn-primary' href='{{ route('editpr',$pr->id) }}'>Edit PR</a>
-                                    @endisset
-                                </div>
+                                        @isset($pr->po->spb->no_spb)
+                                                <a class='btn btn-primary' href='{{ route('editpr',$pr->id) }}'>Edit PR</a>
+                                        @endisset
+                                    </div>
+                                 @endif
                                 
                             </div>    
               

@@ -53,7 +53,8 @@
                                         <input class="date form-control"  type="text" id="datepicker" name="tanggal_memo" value="{{ $date }}" disabled>
                                     </div>
                                  </div>
-
+                                
+                                @if(Auth::user()->hasRole('admin'))
                                 <div class="col-xs-4 col-sm-4 col-md-4">
                                     <br>
                                     @empty($memo->pr->no_pr)
@@ -76,6 +77,7 @@
                                             <a class='btn btn-primary' href='{{ route('monitoring.edit',$memo->id) }}'>Edit Memo</a>
                                     @endisset
                                 </div>
+                                @endif
 
                             </div>
                     {!! Form::close() !!}    
