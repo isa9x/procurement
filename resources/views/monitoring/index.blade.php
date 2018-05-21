@@ -6,7 +6,6 @@
                 
                 @section ('pane2_panel_title', 'Monitoring PR / PO')
                 @section ('pane2_panel_body')
-                    
 
                 @if ($message = Session::get('success'))
                     <div class="alert alert-success">
