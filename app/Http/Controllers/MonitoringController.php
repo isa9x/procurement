@@ -36,7 +36,7 @@ class MonitoringController extends Controller
      * Show the form for creating a new resource.
      *     * @return \Illuminate\Http\Response
      */
-    public function create()
+    public function create(Request $request)
     {
         $request->user()->authorizeRoles('admin');
         return view('monitoring.memo.create');
@@ -93,7 +93,7 @@ class MonitoringController extends Controller
             ->with('success','Input Memo Berhasil');         
     }
 
-    public function createpr($id)
+    public function createpr(Request $request,$id)
     {   
         $request->user()->authorizeRoles('admin');
         $pr=Pr::find($id);
@@ -131,7 +131,7 @@ class MonitoringController extends Controller
                         ->with('success','PR berhasil di tambah');   
     }
 
-    public function createpo($id)
+    public function createpo(Request $request,$id)
     {   
         $request->user()->authorizeRoles('admin');
         $po=Po::find($id);
@@ -168,7 +168,7 @@ class MonitoringController extends Controller
                         ->with('success','PO berhasil di tambah');  
     }
     
-    public function createspb($id)
+    public function createspb(Request $request,$id)
     {
         $request->user()->authorizeRoles('admin');
         $spb=Spb::find($id);
@@ -269,8 +269,13 @@ class MonitoringController extends Controller
                    ";
             $l[7] = $value->status;
             $l[8] = " 
-                <a class='btn btn-danger' href='".route('monitoring.destroy',$value->id)."' data-method = 'DELETE' data-confirm='Yakin untuk menghapus data?' >Hapus</a>
+                <form action='".route('monitoring.destroy',$value->id)."' method='post'>
+                ".csrf_field()."
+                <input name='_method' type='hidden' value='DELETE'>
+                <button class='btn btn-danger' type='submit' data-confirm='Yakin untuk menghapus data?' >Hapus</button>
+                </form>
                 ";
+
 
             $data[$i]=$l;
             $i++;
@@ -322,28 +327,28 @@ class MonitoringController extends Controller
      * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    public function edit($id)
+    public function edit(Request $request,$id)
     {
         $request->user()->authorizeRoles('admin');
         $memo=Memo::find($id);
         return view('monitoring.memo.edit',compact('memo'));
     }
 
-    public function editpr($id)
+    public function editpr(Request $request,$id)
     {
         $request->user()->authorizeRoles('admin');
         $pr=Pr::find($id);
         return view('monitoring.pr.edit',compact('pr'));
     }
 
-    public function editpo($id)
+    public function editpo(Request $request,$id)
     {
         $request->user()->authorizeRoles('admin');
         $po=Po::find($id);
         return view('monitoring.po.edit',compact('po'));
     }
 
-    public function editspb($id)
+    public function editspb(Request $request,$id)
     {
         $request->user()->authorizeRoles('admin');
         $spb=Spb::find($id);
@@ -393,7 +398,7 @@ class MonitoringController extends Controller
      * @return \Illuminate\Http\Response
      */
     
-    public function destroy($id)
+    public function destroy(Request $request,$id)
     {
         $request->user()->authorizeRoles('admin');
         Memo::find($id)->delete();
