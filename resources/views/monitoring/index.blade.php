@@ -22,7 +22,7 @@
                         </div>
                     </div>
 
-                    <table class="table table-bordered" id ="datatables">
+                    <table class="table table-bordered table-striped" id ="datatables">
                        <thead>
                         <tr>
                                 <th>No</th>

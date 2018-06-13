@@ -22,7 +22,6 @@ class MonitoringController extends Controller
      */
     public function index(Request $request)
     {
-
         if($request->user()->hasRole('admin')){
             $memo = Memo::all();
             return view('monitoring.index',compact('memo'));
