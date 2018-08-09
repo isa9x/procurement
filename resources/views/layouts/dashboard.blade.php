@@ -90,5 +90,7 @@
             format: 'dd-mm-yyyy'  
          });  
     </script>
+
+    @yield('footer')
 </html>
 

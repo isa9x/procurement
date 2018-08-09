@@ -15,11 +15,10 @@ class CreatePoTable extends Migration
     {
         Schema::create('po', function (Blueprint $table) {
             $table->increments('id');
-            $table->integer('pr_id')->unsigned();
-            $table->foreign('pr_id')->references('id')->on('pr')->onDelete('cascade')->onUpdate('cascade');
-            $table->string('no_po')->nullable();
-            $table->string('scan_po')->nullable();
-            $table->integer('tanggal_po')->nullable();
+            $table->integer('barang_id')->unsigned();
+            $table->string('nomor')->nullable();
+            $table->dateTime('tanggal_ttd_manager')->nullable();
+            $table->dateTime('tanggal_ttd_dirops')->nullable();
             $table->timestamps();
         });
     }

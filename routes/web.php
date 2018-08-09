@@ -24,6 +24,9 @@ Route::patch('monitoring/updatepr/{id}','MonitoringController@storepr')->name('u
 Route::get('monitoring/showpr/{id}','MonitoringController@showpr')->name('showpr');
 Route::get('monitoring/pr/{id}/edit','MonitoringController@editpr')->name('editpr');
 
+Route::get("addmore","HomeController@addMore");
+Route::post("addmore","HomeController@addMorePost");
+
 Route::get('monitoring/inputpo/{id}/input','MonitoringController@createpo')->name('inputpo');
 Route::patch('monitoring/updatepo/{id}','MonitoringController@storepo')->name('updatepo');
 Route::get('monitoring/showpo/{id}','MonitoringController@showpo')->name('showpo');

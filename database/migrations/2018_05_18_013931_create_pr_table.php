@@ -15,11 +15,11 @@ class CreatePrTable extends Migration
     {
         Schema::create('pr', function (Blueprint $table) {
             $table->increments('id');
-            $table->integer('memo_id')->unsigned();
-            $table->foreign('memo_id')->references('id')->on('memo')->onDelete('cascade')->onUpdate('cascade');
-            $table->string('no_pr')->nullable();
-            $table->string('scan_pr')->nullable();
-            $table->integer('tanggal_pr')->nullable();
+            $table->integer('barang_id')->unsigned();
+            $table->foreign('barang_id')->references('id')->on('barang')->onDelete('cascade')->onUpdate('cascade');
+            $table->string('nomor')->nullable();
+            $table->dateTime('tanggal_ttd_manager')->nullable();
+            $table->dateTime('tanggal_ttd_dirops')->nullable();
             $table->timestamps();
         });
     }

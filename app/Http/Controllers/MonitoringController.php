@@ -3,18 +3,20 @@
 namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
+use Carbon\Carbon;
 use Datatables;
 use App\Memo;
+use App\Barang;
 use App\Pr;
 use App\Po;
 use App\Spb;
 
 class MonitoringController extends Controller
 {
-    public function __construct()
-  {
-    $this->middleware('auth');
-  }
+  //   public function __construct()
+  // {
+  //   $this->middleware('auth');
+  // }
     /**
      * Display a listing of the resource.
      *
@@ -22,13 +24,18 @@ class MonitoringController extends Controller
      */
     public function index(Request $request)
     {
-        if($request->user()->hasRole('admin')){
-            $memo = Memo::all();
-            return view('monitoring.index',compact('memo'));
-        }else if ($request->user()->hasRole('viewer')){
-            $memo = Memo::all();
-            return view('monitoring.indexviewer',compact('memo'));
-        }
+        // if($request->user()->hasRole('admin')){
+        //     $memo = Memo::all();
+        //     return view('monitoring.index',compact('memo'));
+        // }else if ($request->user()->hasRole('viewer')){
+        //     $memo = Memo::all();
+        //     return view('monitoring.indexviewer',compact('memo'));
+        // }
+
+        $barang = Barang::latest()->paginate(10);
+
+        return view('monitoring.index2',compact('barang'))
+        ->with('i', (request()->input('page', 1) - 1) * 5);
     }
 
     /**
@@ -37,7 +44,7 @@ class MonitoringController extends Controller
      */
     public function create(Request $request)
     {
-        $request->user()->authorizeRoles('admin');
+        //$request->user()->authorizeRoles('admin');
         return view('monitoring.memo.create');
     }
 
@@ -49,44 +56,35 @@ class MonitoringController extends Controller
      */
     public function store(Request $request)
     {
-        if($request->hasfile('scan_memo'))
-         {
-            $file = $request->file('scan_memo');
-            $extension = $file->getClientOriginalExtension();
-            $filename=time().$file->getClientOriginalName(). '.' .$extension;
-            $file->move(public_path().'/images/memo', $filename);
-            $request->scan_memo='images/memo/'. $filename;
-         }
 
-        $date=date_create($request->get('tanggal_memo'));
-        $format = date_format($date,"Y-m-d");
-        $request->tanggal_memo = strtotime($format);
-
-        $memo = Memo::create([
-            'no_memo' => $request->no_memo,
-            'spesifikasi' => $request->spesifikasi,     
-            'scan_memo' => $request->scan_memo,
-            'tanggal_memo' => $request->tanggal_memo,
-            'status' => 'Sedang Proses PR',
-
+        // $date=date_create($request->get('tanggal_memo'));
+        // $format = date_format($date,"Y-m-d");
+        //$request->tanggal_memo = strtotime($format);
+        //Carbon::parse($value)->format('d/m/Y');
+        //dd(Carbon::parse($request->tanggal_memo)->format('d/m/Y'));
+                    
+            $memo = Memo::create([
+            'nomor' => $request->nomor,
+            'tanggal_memo' => Carbon::parse($request->tanggal_memo),     
+            'tanggal_terima' => Carbon::parse($request->tanggal_terima)
         ]);
+        
+        $idmemo=$memo->id;
+
+        for($i=0;$i < count($request['nama']); ++$i){
+                $barang=new Barang;
+                $barang->memo_id=$idmemo;
+                $barang->nama=$request['nama'][$i];
+                $barang->spesifikasi=$request['spesifikasi'][$i];
+                $barang->jumlah=$request['jumlah'][$i];
+                $barang->satuan=$request['satuan'][$i];
+                $barang->keterangan=$request['keterangan'][$i];
+                $barang->status_pi=$request['status_pi'][$i];
+
+                $barang->save();
+        }
 
         $memo->save();
-    
-        $pr=Pr::create([
-            'memo_id' => $memo->id,
-        ]);
-        $pr->save();
-
-        $po=Po::create([
-            'pr_id' => $pr->id,
-        ]);
-        $po->save();
-
-        $spb=Spb::create([
-            'po_id' => $po->id,
-        ]);
-        $spb->save();
 
         return redirect('monitoring')
             ->with('success','Input Memo Berhasil');         
@@ -94,23 +92,14 @@ class MonitoringController extends Controller
 
     public function createpr(Request $request,$id)
     {   
-        $request->user()->authorizeRoles('admin');
-        $pr=Pr::find($id);
-        return view('monitoring.pr.create',compact('pr'));
+        //$request->user()->authorizeRoles('admin');
+        $idbarang = $id;
+        return view('monitoring.pr.create',compact('idbarang'));
     }
 
     public function storepr(Request $request,Pr $pr,$id)
     {       
         $pr = Pr::find($id);
-
-        if($request->hasfile('scan_pr'))
-         {
-            $file = $request->file('scan_pr');
-            $extension = $file->getClientOriginalExtension();
-            $filename=time().$file->getClientOriginalName(). '.' .$extension;
-            $file->move(public_path().'/images/pr', $filename);
-            $request->scan_pr='images/pr/'. $filename;
-         }
 
         $date=date_create($request->get('tanggal_pr'));
         $format = date_format($date,"Y-m-d");
@@ -119,7 +108,6 @@ class MonitoringController extends Controller
 
         Pr::find($id)->update([
             'no_pr' => $request->no_pr,
-            'scan_pr' => $request->scan_pr,
             'tanggal_pr' => $request->tanggal_pr,
         ]);
         
@@ -132,23 +120,14 @@ class MonitoringController extends Controller
 
     public function createpo(Request $request,$id)
     {   
-        $request->user()->authorizeRoles('admin');
-        $po=Po::find($id);
-        return view('monitoring.po.create',compact('po'));
+        //$request->user()->authorizeRoles('admin');
+        $idbarang = $id;
+        return view('monitoring.po.create',compact('idbarang'));
     }
 
     public function storepo(Request $request,Pr $pr,$id)
     {
         $po = Po::find($id);
-
-        if($request->hasfile('scan_po'))
-         {
-            $file = $request->file('scan_po');
-            $extension = $file->getClientOriginalExtension();
-            $filename=time().$file->getClientOriginalName(). '.' .$extension;
-            $file->move(public_path().'/images/po', $filename);
-            $request->scan_po='images/po/'. $filename;
-         }
 
         $date=date_create($request->get('tanggal_po'));
         $format = date_format($date,"Y-m-d");
@@ -156,7 +135,6 @@ class MonitoringController extends Controller
 
         Po::find($id)->update([
             'no_po' => $request->no_po,
-            'scan_po' => $request->scan_po,
             'tanggal_po' => $request->tanggal_po,
         ]);
 
@@ -178,22 +156,12 @@ class MonitoringController extends Controller
     {
         $spb = Spb::find($id);
 
-        if($request->hasfile('scan_spb'))
-         {
-            $file = $request->file('scan_spb');
-            $extension = $file->getClientOriginalExtension();
-            $filename=time().$file->getClientOriginalName(). '.' .$extension;
-            $file->move(public_path().'/images/spb', $filename);
-            $request->scan_spb='images/spb/'. $filename;
-         }
-
         $date=date_create($request->get('tanggal_spb'));
         $format = date_format($date,"Y-m-d");
         $request->tanggal_spb = strtotime($format);
 
         Spb::find($id)->update([
             'no_spb' => $request->no_spb,
-            'scan_spb' => $request->scan_spb,
             'tanggal_spb' => $request->tanggal_spb,
         ]);
 
@@ -242,32 +210,26 @@ class MonitoringController extends Controller
 
     public function datatables(Request $request){
     
-
-     if($request->user()->hasRole('admin')){
-        $memo = Memo::get()->all();
+        // $l[4] ="
+        //          <a href='".route('showpr',$value->pr->id)."'>".$value->pr->no_pr."</a>
+        //        "; 
+        $barang = Barang::get()->all();
         $data=array();
         $l=array();
         $i=0;
-        foreach ($memo as $value) {
 
-            $date=date('d-m-Y', $value['tanggal_memo']);
+        foreach ($barang as $value) {
+
             $l[0] = $i+1;
             $l[1] ="
-                    <a href='".route('monitoring.show',$value->id)."'>".$value->no_memo."</a>
+                    <a href='".route('monitoring.show',$value->id)."'>".$value->nama."</a>
                    ";
-            $l[2] = $date;
-            $l[3] = $value->spesifikasi;
-            $l[4] ="
-                     <a href='".route('showpr',$value->pr->id)."'>".$value->pr->no_pr."</a>
-                   "; 
-            $l[5] ="
-                     <a href='".route('showpo',$value->pr->po->id)."'>".$value->pr->po->no_po."</a>
-                   ";
-            $l[6] ="
-                     <a href='".route('showspb',$value->pr->po->spb->id)."'>".$value->pr->po->spb->no_spb."</a>
-                   ";
-            $l[7] = $value->status;
-            $l[8] = " 
+            $l[2] = $value->spesifikasi;
+            $l[3] = $value->memo->nomor;
+            $l[4] = $value->pr->nomor;
+            $l[5] = '$value->po->nomor';
+            $l[6] = $value->status;
+            $l[7] = " 
                 <form action='".route('monitoring.destroy',$value->id)."' method='post'>
                 ".csrf_field()."
                 <input name='_method' type='hidden' value='DELETE'>
@@ -275,48 +237,47 @@ class MonitoringController extends Controller
                 </form>
                 ";
 
-
             $data[$i]=$l;
             $i++;
         }
         
         $return['data'] = $data;
         return response()->json($return);   
-      }
+      
 
-     if($request->user()->hasRole('viewer')){
-        $memo = Memo::get()->all();
-        $data=array();
-        $l=array();
-        $i=0;
-        foreach ($memo as $value) {
+     // if($request->user()->hasRole('viewer')){
+     //    $memo = Memo::get()->all();
+     //    $data=array();
+     //    $l=array();
+     //    $i=0;
+     //    foreach ($memo as $value) {
 
-            $date=date('d-m-Y', $value['tanggal_memo']);
-            $l[0] = $i+1;
-            $l[1] ="
-                    <a href='".route('monitoring.show',$value->id)."'>".$value->no_memo."</a>
-                   ";
-            $l[2] = $date;
-            $l[3] = $value->spesifikasi;
-            $l[4] ="
-                     <a href='".route('showpr',$value->pr->id)."'>".$value->pr->no_pr."</a>
-                   "; 
-            $l[5] ="
-                     <a href='".route('showpo',$value->pr->po->id)."'>".$value->pr->po->no_po."</a>
-                   ";
-            $l[6] ="
-                     <a href='".route('showspb',$value->pr->po->spb->id)."'>".$value->pr->po->spb->no_spb."</a>
-                   ";
-            $l[7] = $value->status;
+     //        $date=date('d-m-Y', $value['tanggal_memo']);
+     //        $l[0] = $i+1;
+     //        $l[1] ="
+     //                <a href='".route('monitoring.show',$value->id)."'>".$value->no_memo."</a>
+     //               ";
+     //        $l[2] = $date;
+     //        $l[3] = $value->spesifikasi;
+     //        $l[4] ="
+     //                 <a href='".route('showpr',$value->pr->id)."'>".$value->pr->no_pr."</a>
+     //               "; 
+     //        $l[5] ="
+     //                 <a href='".route('showpo',$value->pr->po->id)."'>".$value->pr->po->no_po."</a>
+     //               ";
+     //        $l[6] ="
+     //                 <a href='".route('showspb',$value->pr->po->spb->id)."'>".$value->pr->po->spb->no_spb."</a>
+     //               ";
+     //        $l[7] = $value->status;
            
 
-            $data[$i]=$l;
-            $i++;
-        }
+     //        $data[$i]=$l;
+     //        $i++;
+     //    }
         
-        $return['data'] = $data;
-        return response()->json($return);   
-      } 
+     //    $return['data'] = $data;
+     //    return response()->json($return);   
+     //  } 
 
     }
 
@@ -364,15 +325,6 @@ class MonitoringController extends Controller
     public function update(Request $request, $id)
     {
         $memo = Memo::find($id);
-
-        if($request->hasfile('scan_memo'))
-         {
-            $file = $request->file('scan_memo');
-            $extension = $file->getClientOriginalExtension();
-            $filename=time().$file->getClientOriginalName(). '.' .$extension;
-            $file->move(public_path().'/images/memo', $filename);
-            $request->scan_memo='images/memo/'. $filename;
-         }
 
         $date=date_create($request->get('tanggal_memo'));
         $format = date_format($date,"d-m-Y");

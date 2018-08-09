@@ -8,19 +8,19 @@ class Po extends Model
 {
      protected $table = 'po';
      protected $fillable = [
-     	'pr_id',
-        'no_po', 
-        'scan_po',
-        'tanggal_po'
+		'barang_id',     	
+        'nomor', 
+        'tanggal_ttd_manager',
+        'tanggal_ttd_dirops'
     ];
 
-    public function spb()
-    {
-        return $this->hasOne('App\Spb');
-    }
+ //    public function spb()
+ //    {
+ //        return $this->hasOne('App\Spb');
+ //    }
 
-    public function pr()
+    public function barang()
 	{
-	    return $this->belongsTo('App\Pr', 'pr_id');
+	    return $this->belongsTo('App\Barang', 'barang_id');
 	}
 }

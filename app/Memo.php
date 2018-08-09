@@ -9,20 +9,22 @@ class Memo extends Model
      protected $table = 'memo';
      protected $fillable = [
         'user_id',
-        'no_memo', 
-        'scan_memo',
-        'spesifikasi',
+        'nomor', 
         'tanggal_memo',
-        'status'
+        'tanggal_terima'
     ];
 
-    public function pr()
-    {
-        return $this->hasOne('App\Pr');
+    public function barang(){
+        return $this->hasMany('App\Barang');
     }
 
-    public function user()
-    {
-        return $this->belongsTo('App\User','user_id');
-    }
+    // public function pr()
+    // {
+    //     return $this->hasOne('App\Pr');
+    // }
+
+    // public function user()
+    // {
+    //     return $this->belongsTo('App\User','user_id');
+    // }
 }
