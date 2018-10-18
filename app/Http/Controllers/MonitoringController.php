@@ -35,7 +35,7 @@ class MonitoringController extends Controller
         $barang = Barang::latest()->paginate(10);
 
         return view('monitoring.index2',compact('barang'))
-        ->with('i', (request()->input('page', 1) - 1) * 5);
+        ->with('i', (request()->input('page', 1) - 1) * 10);
     }
 
     /**
@@ -71,7 +71,8 @@ class MonitoringController extends Controller
         
         $idmemo=$memo->id;
 
-        for($i=0;$i < count($request['nama']); ++$i){
+        $jumlah=@count($request['nama']);
+        for($i=0;$i < $jumlah; ++$i){
                 $barang=new Barang;
                 $barang->memo_id=$idmemo;
                 $barang->nama=$request['nama'][$i];
@@ -90,57 +91,47 @@ class MonitoringController extends Controller
             ->with('success','Input Memo Berhasil');         
     }
 
-    public function createpr(Request $request,$id)
+    public function createpr($id)
     {   
         //$request->user()->authorizeRoles('admin');
-        $idbarang = $id;
-        return view('monitoring.pr.create',compact('idbarang'));
+        //$idbarang = $id;
+        $barang=Barang::find($id);
+        return view('monitoring.pr.create')->with('barang',$barang);
     }
 
-    public function storepr(Request $request,Pr $pr,$id)
+    public function storepr(Request $request)
     {       
-        $pr = Pr::find($id);
-
-        $date=date_create($request->get('tanggal_pr'));
-        $format = date_format($date,"Y-m-d");
-        $request->tanggal_pr = strtotime($format);
-
-
-        Pr::find($id)->update([
-            'no_pr' => $request->no_pr,
-            'tanggal_pr' => $request->tanggal_pr,
-        ]);
         
-        if($pr->memo->status ='Sedang Proses PR'){
-        Memo::find($pr->memo->id)->update(['status'=>'Proses Pembuatan PO']);
-        }   
-         return redirect()->route('monitoring.index')
+        // if($pr->memo->status ='Sedang Proses PR'){
+        // Memo::find($pr->memo->id)->update(['status'=>'Proses Pembuatan PO']);
+        // }   
+        // 
+        $pr = Pr::create([
+            'barang_id' => $request->barang_id,
+            'nomor' => $request->nomor,     
+            'tanggal_ttd_manager' => Carbon::parse($request->tanggal_ttd_manager),
+            'tanggal_ttd_dirops' => Carbon::parse($request->tanggal_ttd_dirops)
+        ]);
+
+        return redirect()->route('monitoring.index')
                         ->with('success','PR berhasil di tambah');   
     }
 
-    public function createpo(Request $request,$id)
+    public function createpo($id)
     {   
-        //$request->user()->authorizeRoles('admin');
-        $idbarang = $id;
-        return view('monitoring.po.create',compact('idbarang'));
+        $barang=Barang::find($id);
+        return view('monitoring.po.create')->with('barang',$barang);
     }
 
-    public function storepo(Request $request,Pr $pr,$id)
+    public function storepo(Request $request)
     {
-        $po = Po::find($id);
-
-        $date=date_create($request->get('tanggal_po'));
-        $format = date_format($date,"Y-m-d");
-        $request->tanggal_po = strtotime($format);
-
-        Po::find($id)->update([
-            'no_po' => $request->no_po,
-            'tanggal_po' => $request->tanggal_po,
+        $po = Po::create([
+            'barang_id' => $request->barang_id,
+            'nomor' => $request->nomor,     
+            'tanggal_ttd_manager' => Carbon::parse($request->tanggal_ttd_manager),
+            'tanggal_ttd_dirops' => Carbon::parse($request->tanggal_ttd_dirops)
         ]);
 
-        if($po->pr->memo->status ='Proses Pembuatan PO'){
-        Memo::find($po->pr->memo->id)->update(['status'=>'Sedang Menunggu SPB']);
-        }
          return redirect()->route('monitoring.index')
                         ->with('success','PO berhasil di tambah');  
     }
@@ -351,8 +342,8 @@ class MonitoringController extends Controller
     
     public function destroy(Request $request,$id)
     {
-        $request->user()->authorizeRoles('admin');
-        Memo::find($id)->delete();
+        //$request->user()->authorizeRoles('admin');
+        Barang::find($id)->delete();
         return redirect()->route('monitoring.index')
                         ->with('success','Memo berhasil dihapus');
     }

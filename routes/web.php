@@ -20,7 +20,7 @@ Route::get('monitoring/datatables', 'MonitoringController@datatables')->name('mo
 Route::resource('monitoring','MonitoringController');
 
 Route::get('monitoring/inputpr/{id}/input','MonitoringController@createpr')->name('inputpr');
-Route::patch('monitoring/updatepr/{id}','MonitoringController@storepr')->name('updatepr');
+Route::post('monitoring/','MonitoringController@storepr')->name('storepr');
 Route::get('monitoring/showpr/{id}','MonitoringController@showpr')->name('showpr');
 Route::get('monitoring/pr/{id}/edit','MonitoringController@editpr')->name('editpr');
 
@@ -28,7 +28,7 @@ Route::get("addmore","HomeController@addMore");
 Route::post("addmore","HomeController@addMorePost");
 
 Route::get('monitoring/inputpo/{id}/input','MonitoringController@createpo')->name('inputpo');
-Route::patch('monitoring/updatepo/{id}','MonitoringController@storepo')->name('updatepo');
+Route::post('monitoring/','MonitoringController@storepo')->name('storepo');
 Route::get('monitoring/showpo/{id}','MonitoringController@showpo')->name('showpo');
 Route::get('monitoring/po/{id}/edit','MonitoringController@editpo')->name('editpo');
 

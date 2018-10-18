@@ -1,7 +1,7 @@
 @extends('layouts.dashboard')
 @section('page_heading','Dashboard')
 @section('section')
-           
+
             <div class="row">
                 <div class="col-lg-12">
                 
@@ -53,17 +53,19 @@
                                 </td>
                                 <td>{{ $value->status }}</td>
                                 <td>
-                                
+
                                     @empty($value->pr->nomor)
-                                   <a class="btn btn-info" href="{{ route('inputpr',$value->id) }}">Input PR</a>
+                                   <a class="btn btn-success" href="{{ route('inputpr',$value->id)}}">Input PR</a>
                                     @endempty
                                     @empty($value->po->nomor)
                                        <a class="btn btn-primary" href="{{ route('inputpo',$value->id)}}">Input PO</a>
                                     @endempty
-                                
-                                    {!! Form::open(['method' => 'DELETE','route' => ['monitoring.destroy', $value->id],'style'=>'display:inline', 'class'=>'form-delete']) !!}
-                                    {!! Form::submit('Delete', ['class' => 'btn btn-danger']) !!}
+
+                                    {!! Form::model($value, ['method' => 'delete', 'route' => ['monitoring.destroy', $value->id], 'style'=>'display:inline','class'=>'hapus']) !!}
+                                    {!! Form::hidden('id', $value->id) !!}
+                                    {!! Form::submit(trans('Hapus'), ['class' => 'btn btn-danger delete', 'name' => 'delete_modal']) !!}
                                     {!! Form::close() !!}
+
                                 </td>
                             </tr>
                         @endforeach
@@ -72,20 +74,33 @@
                     {!! $barang->render() !!}
 
                 @endsection
+
                 </div>
             </div>
                 @include('widgets.panel', array('header'=>true, 'as'=>'pane2'))
                 </div>
 			</div>
 
-            <script>
-                $('table[data-form="deleteForm"]').on('click', '.form-delete', function(e){
-                    e.preventDefault();
-                    var $form=$(this);
-                    $('#confirm').modal({ backdrop: 'static', keyboard: false })
-                        .on('click', '#delete-btn', function(){
-                            $form.submit();
-                        });
-                });
-            </script>
+<script type="text/javascript">
+    $('table[data-form="deleteForm"]').on('click', '.hapus', function(e){
+    e.preventDefault();
+    var $form=$(this);
+    $('#confirm').modal({ backdrop: 'static', keyboard: false })
+        .on('click', '#delete-btn', function(){
+            $form.submit();
+        });
+    });
+
+    $('#pr01').modal({ backdrop: 'static', keyboard: false })
+
+    var modal = document.getElementById('pr01');
+
+    // When the user clicks anywhere outside of the modal, close it
+    window.onclick = function(event) {
+        if (event.target == modal) {
+            modal.style.display = "none";
+        }
+    }
+
+</script>
 @stop

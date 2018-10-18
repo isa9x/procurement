@@ -8,7 +8,7 @@
                 @section ('pane2_panel_title', 'Input Nomor Purchase Requestion (PR)')
                 @section ('pane2_panel_body')
                     
-                    {!! Form::model($pr, ['method' =>'PATCH','route' => ['updatepr', $pr->id],'files'=>true]) !!}
+                    {{-- {!! Form::model($pr, ['method' =>'PATCH','route' => ['updatepr', $pr->id],'files'=>true]) !!}
 
                         @csrf
                         <div class="row">
@@ -41,7 +41,31 @@
                                 {!! Form::submit('Simpan',array('class'=>'btn btn-success')) !!}
                             </div>
                         </div>
-                    {!! Form::close() !!}    
+                    {!! Form::close() !!}     --}}                   
+                    <label for="name">Nama Barang:</label>
+                    <input type="text" class="form-control" name="name" value="{{$barang->nama}}" disabled>           
+
+                    <form action="{{ route('storepr') }}" method="post">
+                        {{ Form::hidden('barang_id', $barang->id) }}
+                        {{ csrf_field() }}
+                        <div class="form-group">
+                            {!! Form::label('nomor', 'Nomor PR') !!}<br>
+                            {!! Form::text('nomor', null, array('placeholder' => 'Masukkan Nomor PR','class' => 'form-control')) !!}
+                        </div>
+
+                         <div class="form-group">
+                            {!! Form::label('tanggal', 'Tanggal TTD Manager') !!}
+                            {!! Form::date('tanggal_ttd_manager', \Carbon\Carbon::now(),array('class' => 'form-control')) !!}
+                         </div>
+
+                         <div class="form-group">
+                            {!! Form::label('tanggal', 'Tanggal TTD Dirops') !!}
+                            {!! Form::date('tanggal_ttd_dirops', \Carbon\Carbon::now(),array('class' => 'form-control')) !!}
+                         </div>
+
+                         <button type="submit" class="btn btn-success">Simpan</button>
+
+                    </form>
                     <!-- /.panel -->
                 @endsection
                 @include('widgets.panel', array('header'=>true, 'as'=>'pane2'))
