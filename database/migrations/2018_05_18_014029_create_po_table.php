@@ -17,8 +17,9 @@ class CreatePoTable extends Migration
             $table->increments('id');
             $table->integer('barang_id')->unsigned();
             $table->string('nomor')->nullable();
-            $table->dateTime('tanggal_ttd_manager')->nullable();
-            $table->dateTime('tanggal_ttd_dirops')->nullable();
+            $table->dateTime('tanggal_po')->nullable();
+            $table->dateTime('tanggal_kirim_vendor')->nullable();
+            $table->string('status');
             $table->timestamps();
         });
     }

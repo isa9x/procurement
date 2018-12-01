@@ -343,7 +343,7 @@ class MonitoringController extends Controller
     public function destroy(Request $request,$id)
     {
         //$request->user()->authorizeRoles('admin');
-        Barang::find($id)->delete();
+        Po::find($id)->delete();
         return redirect()->route('monitoring.index')
                         ->with('success','Memo berhasil dihapus');
     }
